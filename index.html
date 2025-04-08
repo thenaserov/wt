@@ -1,0 +1,471 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js"></script> 
+    <title>Configuration Settings</title>  
+</head>  
+<style>
+    body {  
+    font-family: Arial, sans-serif;  
+    background-color: #f4f4f4;  
+    margin: 0;  
+    padding: 20px;  
+}  
+
+.container {  
+    max-width: 800px;  
+    margin: auto;  
+    text-align: left;  
+}  
+
+h1 {  
+    color: #333;  
+    text-align: center;  
+}  
+
+.section {  
+    background: #fff;  
+    border-radius: 8px;  
+    padding: 20px;  
+    margin-bottom: 20px;  
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  
+}  
+
+.form-group, .form-group-checkbox {  
+    display: flex;  
+    align-items: center;  
+    margin: 15px 0;  
+}  
+
+.form-group label {  
+    flex: 1; /* Takes up one part of the space */  
+    margin-right: 10px;  
+}  
+
+input[type="text"],  
+input[type="number"],  
+select {  
+    flex: 2; /* Takes up two parts of the space */  
+    border: none; /* No border */  
+    border-bottom: 1px solid #ccc; /* Bottom border only */  
+    padding: 5px;  
+    outline: none; /* Removes the outline on focus */  
+}  
+
+.checkbox-group {  
+    display: flex;  
+    justify-content: flex-start;  
+    align-items: center;  
+    margin: 10px 0;  
+}  
+
+.form-group-checkbox label {  
+    margin-right: 10px; /* Space between label and checkbox */  
+}  
+
+button {  
+    cursor: pointer;  
+}  
+
+.button-group {  
+    margin: 20px 0;  
+}  
+
+.set-button, .get-button {  
+    background-color: #007BFF;  
+    color: white;  
+    border: none;  
+    padding: 10px 15px;  
+    border-radius: 5px;  
+    cursor: pointer;  
+    margin-right: 10px;  
+}  
+
+.set-button:hover,  
+.get-button:hover {  
+    background-color: #0056b3;  
+}  
+
+.clamp-info {  
+    display: flex;  
+    justify-content: space-between;  
+}  
+
+.clamp-info .form-group {  
+    flex: 1; /* Flex to occupy space evenly */  
+}
+</style>
+<body>  
+    <div class="container">  
+        <h1>Configuration</h1>  
+
+        <form>  
+            <div class="section">  
+                <h2>WiFi Configuration</h2>  
+
+                <div class="checkbox-group">  
+                    <label for="wifi">WiFi:</label>  
+                    <input type="checkbox" id="wifi" checked>  
+                    
+                    <label for="mobile">4G:</label>  
+                    <input type="checkbox" id="mobile">  
+
+                    <label for="lan">LAN:</label>  
+                    <input type="checkbox" id="lan">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="wifi-ssid">WiFi SSID:</label>  
+                    <input type="text" id="wifi-ssid" value="DadashiNetwork3" disabled>  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="wifi-password">WiFi Password:</label>  
+                    <input type="text" id="wifi-password" value="********">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="apn">4G APN:</label>  
+                    <input type="text" id="apn" placeholder="Max length: 32 characters">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="account">4G Account:</label>  
+                    <input type="text" id="account" placeholder="Max length: 32 characters">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="password">4G Password:</label>  
+                    <input type="text" id="password" placeholder="Max length: 32 characters">  
+                </div>  
+                
+                <div class="form-group">  
+                    <label for="ip-address">IP Address:</label>  
+                    <input type="text" id="ip-address" value="192.168.1.10">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="subnet-mask">Subnet Mask:</label>  
+                    <input type="text" id="subnet-mask" value="255.255.255.0">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="gateway">Default Gateway:</label>  
+                    <input type="text" id="gateway" value="192.168.1.1">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="dns">DNS:</label>  
+                    <input type="text" id="dns" value="8.8.8.8">  
+                </div>  
+
+                <div class="form-group-checkbox">  
+                    <label for="lan-dhcp">LAN DHCP:</label>  
+                    <input type="checkbox" id="lan-dhcp">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="server-url">Server URL:</label>  
+                    <input type="text" id="server-url" value="wss://dchw.emapna.com/ocpp/">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="cp-name">CP Name:</label>  
+                    <input type="text" id="cp-name" value="MCGFF3442953" disabled>  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="auth-key-2">Authorization Key:</label>  
+                    <input type="text" id="auth-key-2" value="********">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="output-current-2">Output Current:</label>  
+                    <input type="number" id="output-current-2" value="30">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="charge-mode-2">Charge Mode:</label>  
+                    <select id="charge-mode-2">  
+                        <option value="APP">APP</option>  
+                    </select>  
+                </div>  
+
+                <div class="form-group-checkbox">  
+                    <label for="power-distribution-2">Power Distribution Enable:</label>  
+                    <input type="checkbox" id="power-distribution-2">  
+                </div>  
+            </div>  
+
+            <div class="section">  
+                <h2>CP Configuration</h2>  
+                
+                <div class="form-group">  
+                    <label for="auth-key">Authorization Key:</label>  
+                    <input type="text" id="auth-key" value="********">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="output-current">Output Current:</label>  
+                    <input type="number" id="output-current" value="30">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="charge-mode">Charge Mode:</label>  
+                    <select id="charge-mode">  
+                        <option value="APP">APP</option>  
+                    </select>  
+                </div>  
+
+                <div class="form-group-checkbox">  
+                    <label for="power-distribution">Power Distribution Enable:</label>  
+                    <input type="checkbox" id="power-distribution">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="sampling-method">Sampling Method:</label>  
+                    <select id="sampling-method">  
+                        <option value="CT">CT</option>  
+                    </select>  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="home-power">Home Power Current:</label>  
+                    <input type="number" id="home-power" value="100">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="meter-address">Power Meter Address:</label>  
+                    <input type="number" id="meter-address" value="1">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="phase-rotation">Phase Rotation:</label>  
+                    <input type="text" id="phase-rotation" value="NotApplicable">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="solar-mode">Solar Mode:</label>  
+                    <select id="solar-mode">  
+                        <option value="Disable">Disable</option>  
+                    </select>  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="solar-current">Solar Current From Grid:</label>  
+                    <input type="number" id="solar-current" value="0">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="solar-stable">Solar Stable Time:</label>  
+                    <input type="number" id="solar-stable" value="60">  
+                </div>  
+
+                <div class="form-group-checkbox">  
+                    <label for="dlb-mode">DLB Mode:</label>  
+                    <input type="checkbox" id="dlb-mode">  
+                </div>  
+
+                <div class="form-group-checkbox">  
+                    <label for="diode-detection">Diode Detection:</label>  
+                    <input type="checkbox" id="diode-detection">  
+                </div>  
+
+                <div class="form-group">  
+                    <label for="power-supply">Power Supply Mode:</label>  
+                    <select id="power-supply">  
+                        <option value="TN">TN</option>  
+                    </select>  
+                </div>  
+
+                <div class="button-group">  
+                    <button type="button" class="set-button" id="setButton">SET</button>  
+                    <!-- <button type="button" class="set-button">SET</button>   -->
+                    <button type="button" class="get-button">GET</button>  
+                </div>  
+
+                <div class="clamp-info">  
+                    <div class="form-group">  
+                        <label for="clamp-value">Clamp 1 Value (A):</label>  
+                        <input type="number" id="clamp-value" value="0">  
+                    </div>  
+                    
+                    <div class="form-group">  
+                        <label for="l1-voltage">L1 Voltage (V):</label>  
+                        <input type="number" id="l1-voltage" value="229.1">  
+                    </div>  
+                </div>  
+            </div>  
+        </form>  
+    </div>  
+</body>
+<script>
+    document.getElementById('setButton').addEventListener('click', save);  
+
+function save() {  
+    var finalJson = {};  
+
+    // Collect connection types using checkbox values  
+    var connection = {  
+        wifi: document.getElementById('wifi').checked,  
+        fourG: document.getElementById('mobile').checked,  
+        cable: document.getElementById('lan').checked  
+    };  
+
+    // Combine connection types into a single value  
+    var data = (connection.wifi ? 1 : 0) + (connection.fourG ? 4 : 0) + (connection.cable ? 2 : 0);  
+    finalJson.connection_selected = data.toString();  
+
+    // Collect 4G APN data  
+    finalJson._4G_apn = document.getElementById('apn').value;  
+    finalJson._4G_user = document.getElementById('account').value;  
+    finalJson._4G_pass = document.getElementById('password').value;  
+
+    // Collect WiFi data  
+    finalJson.wifi_ssid = document.getElementById('wifi-ssid').value; // Note: This may be non-editable as it is 'disabled'  
+    finalJson.wifi_pass = document.getElementById('wifi-password').value;  
+
+    // Collect LAN data  
+    finalJson.ip_address = document.getElementById('ip-address').value;  
+    finalJson.subnet_mask = document.getElementById('subnet-mask').value;  
+    finalJson.default_gateway = document.getElementById('gateway').value;  
+    finalJson.dns = document.getElementById('dns').value;  
+    finalJson.dhcp = document.getElementById('lan-dhcp').checked ? "Enabled" : "Disabled";  
+
+    // Collect other fields  
+    finalJson.server_url = document.getElementById('server-url').value;  
+    finalJson.cp_name = document.getElementById('cp-name').value; // This is disabled but might be needed  
+    finalJson.auth_key_2 = document.getElementById('auth-key-2').value;  
+    finalJson.output_current_2 = document.getElementById('output-current-2').value;  
+    finalJson.charge_mode_2 = document.getElementById('charge-mode-2').value;  
+    finalJson.power_distribution_2 = document.getElementById('power-distribution-2').checked;  
+
+    // Collect CP Configuration  
+    finalJson.auth_key = document.getElementById('auth-key').value;  
+    finalJson.output_current = document.getElementById('output-current').value;  
+    finalJson.charge_mode = document.getElementById('charge-mode').value;  
+    finalJson.power_distribution = document.getElementById('power-distribution').checked;  
+    finalJson.sampling_method = document.getElementById('sampling-method').value;  
+    finalJson.home_power = document.getElementById('home-power').value;  
+    finalJson.meter_address = document.getElementById('meter-address').value;  
+    finalJson.phase_rotation = document.getElementById('phase-rotation').value;  
+    finalJson.solar_mode = document.getElementById('solar-mode').value;  
+    finalJson.solar_current = document.getElementById('solar-current').value;  
+    finalJson.solar_stable = document.getElementById('solar-stable').value;  
+    finalJson.dlb_mode = document.getElementById('dlb-mode').checked;  
+    finalJson.diode_detection = document.getElementById('diode-detection').checked;  
+    finalJson.power_supply = document.getElementById('power-supply').value;  
+
+    // Collect clamp values  
+    finalJson.clamp_value = document.getElementById('clamp-value').value;  
+    finalJson.l1_voltage = document.getElementById('l1-voltage').value;  
+
+    var xmlhttp = new XMLHttpRequest();  
+    xmlhttp.open("POST", "http://192.168.1.1:8080/api/writeconfig");  
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");  
+    xmlhttp.onreadystatechange = function (res) {  
+        if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {  
+            var chargerSerial = JSON.parse(res.target.response);  
+            var xhrConfig = new XMLHttpRequest();  
+            xhrConfig.open("POST", "http://192.168.1.1:8080/api/disconnect", true);  
+            xhrConfig.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");  
+            xhrConfig.onreadystatechange = function (res) {  
+                if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {  
+                    endProcess.style.display = "flex";  
+                    main.style.display = "none";  
+                } else if (this.status == 400 || this.status == 404 || this.status == 500) {  
+                    alert("خطایی رخ داده لطفاً با پشتیبانی تماس بگیرید");  
+                }  
+            };  
+            xhrConfig.send(JSON.stringify({ serial: "NONE" }));  
+        }  
+    };  
+    xmlhttp.send(JSON.stringify(finalJson)); // Send the constructed JSON  
+}  
+
+// -----------------------------------------------------------------------------------------------------
+// document.getElementById('setButton').addEventListener('click', save);  
+
+// function save() {  
+//     var finalJson = {};  // Initialize with an empty object or use chargerSerial if needed  
+
+//     // Collect the checkboxes  
+//     var connection = {  
+//         wifi: document.getElementById('wifi').checked,  
+//         fourG: document.getElementById('mobile').checked,  
+//         cable: document.getElementById('lan').checked  
+//     };  
+
+//     var data = 0;  // Initialize the connection type integer  
+//     if (connection.wifi) data += 1;  
+//     if (connection.fourG) data += 4;  
+//     if (connection.cable) data += 2;  
+//     finalJson.connection_selected = data.toString();  
+
+//     // Collect 4G APN data  
+//     var connection_apn = {  
+//         apn: document.getElementById('apn').value,  
+//         user: document.getElementById('account').value,  
+//         password: document.getElementById('password').value  
+//     };  
+//     finalJson._4G_apn = connection_apn.apn;  
+//     finalJson._4G_pass = connection_apn.password;  
+//     finalJson._4G_user = connection_apn.user;  
+
+//     // Collect WiFi data  
+//     var connection_wifi = {  
+//         ssid: document.getElementById('wifi-ssid').value,  
+//         password: document.getElementById('wifi-password').value  
+//     };  
+//     finalJson.wifi_ssid = connection_wifi.ssid;  
+//     finalJson.wifi_pass = connection_wifi.password;  
+
+//     // Collect LAN data  
+//     var connection_cable = {  
+//         ip_address: document.getElementById('ip-address').value,  
+//         subnet_mask: document.getElementById('subnet-mask').value,  
+//         default_gateway: document.getElementById('gateway').value,  
+//         dns: document.getElementById('dns').value,  
+//         dhcp: document.getElementById('lan-dhcp').checked ? "Enabled" : "Disabled" // example for checkbox  
+//     };  
+//     finalJson.ip_address = connection_cable.ip_address;  
+//     finalJson.subnet_mask = connection_cable.subnet_mask;  
+//     finalJson.default_gateway = connection_cable.default_gateway;  
+//     finalJson.dns = connection_cable.dns;  
+//     finalJson.dhcp = connection_cable.dhcp;  
+
+//     // Other fields  
+//     finalJson.auth = document.getElementById('auth-key-2').value; // Assuming freeVending is from this field  
+
+//     var xmlhttp = new XMLHttpRequest();  
+//     xmlhttp.open("POST", "http://192.168.1.1:8080/api/writeconfig");  
+//     xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");  
+//     xmlhttp.onreadystatechange = function (res) {  
+//         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {  
+//             var chargerSerial = JSON.parse(res.target.response);  
+//             var xhrConfig = new XMLHttpRequest();  
+//             xhrConfig.open("POST", "http://192.168.1.1:8080/api/disconnect", true);  
+//             xhrConfig.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");  
+//             xhrConfig.onreadystatechange = function (res) {  
+//                 if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {  
+//                     endProcess.style.display = "flex";  
+//                     main.style.display = "none";  
+//                 } else if (  
+//                     this.status == 400 ||  
+//                     this.status == 404 ||  
+//                     this.status == 500  
+//                 ) {  
+//                     alert("خطایی رخ داده لطفاً با پشتیبانی تماس بگیرید");  
+//                 }  
+//             };  
+//             xhrConfig.send(JSON.stringify({ serial: "NONE" }));  
+//         }  
+//     };  
+//     xmlhttp.send(JSON.stringify(finalJson)); // Send the constructed JSON  
+// }  
+
+</script>
+</html>
