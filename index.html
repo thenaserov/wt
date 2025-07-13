@@ -297,8 +297,8 @@ button {
     document.getElementById('idtag-button-back-to-full-page').addEventListener('click', showFullPage);
     document.getElementById('setButton').addEventListener('click', save);  
     document.getElementById('getButton').addEventListener('click', connectFun);  
-    document.getElementById('send-idtag-button').addEventListener('click', addIDTag); 
-    document.getElementById('read-idtag-button').addEventListener('click', getIDTags); 
+    document.getElementById('send-idtag-button').addEventListener('click', addIDTag2); 
+    document.getElementById('read-idtag-button').addEventListener('click', getIDTags2); 
     document.getElementById('send-to-server-button').addEventListener('click', sendTagsToServer);  
               
     var idtagsList = document.getElementById("sectionidtagslist");
@@ -452,10 +452,82 @@ function getIDTags() {
     xhr.onreadystatechange = function (res) {
         if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
             idTags = JSON.parse(res.target.response);
-            console.log(idTags);
+
+            const tagsList = document.getElementById('tags-list');
+            tagsList.innerHTML = ''; // optional: clear existing list first
+            idTags.forEach(tag => {
+            const li = document.createElement('li');
+            li.textContent = tag;
+            tagsList.appendChild(li);
+    });
         }
     }
+    xhr.send();
 }
+
+
+function getIDTags2() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://192.168.1.1:8080/api/getidtags", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+            const idTags = JSON.parse(xhr.responseText);
+            console.log(idTags);
+
+            const tagsList = document.getElementById('tags-list');
+            tagsList.innerHTML = '';
+
+            idTags.forEach(tag => {
+                const li = document.createElement('li');
+                li.style.display = 'flex';
+                li.style.alignItems = 'center';
+                li.style.gap = '8px';
+
+                const textSpan = document.createElement('span');
+                textSpan.textContent = tag;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'X';
+                deleteBtn.style.color = 'white';
+                deleteBtn.style.backgroundColor = 'red';
+                deleteBtn.style.border = 'none';
+                deleteBtn.style.cursor = 'pointer';
+                deleteBtn.style.padding = '2px 6px';
+
+                deleteBtn.onclick = function () {
+                    fetch('http://192.168.1.1:8080/api/deleteSingleDriver', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: tag })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            li.remove();
+                        } else {
+                            alert('Failed to delete on server.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error while sending request.');
+                    });
+                };
+
+                li.appendChild(textSpan);
+                li.appendChild(deleteBtn);
+                tagsList.appendChild(li);
+            });
+        }
+    };
+
+    xhr.send();
+}
+
+
 
 function showIDTags() {
     var idTagsPage = document.getElementById("sectionidtag");
@@ -488,25 +560,36 @@ function addIDTag()
 
 function addIDTag2() {
     const inputText = document.getElementById('idtag-input-text').value.trim();
-
+    
     if (inputText === '') {
         alert('Please enter some text before saving.');
     } else {
         const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.alignItems = 'center';
+        li.style.gap = '8px';
 
+        // Create span for the text
         const textSpan = document.createElement('span');
         textSpan.textContent = inputText;
 
+        // Create delete button
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'X';
+        deleteBtn.style.color = 'white';
+        deleteBtn.style.backgroundColor = 'red';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.cursor = 'pointer';
+        deleteBtn.style.padding = '2px 6px';
 
+        // Add delete function
         deleteBtn.onclick = function() {
             fetch('http://192.168.1.1:8080/api/deleteSingleDriver', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id: inputText }) // Change key name if needed
+                body: JSON.stringify({ id: inputText })
             })
             .then(response => {
                 if (response.ok) {
