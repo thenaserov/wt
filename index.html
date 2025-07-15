@@ -100,7 +100,7 @@ button {
 <body>  
     <div class="container" id="container-full">  
         <h1 id="topserial">MCGFF3442953</h1>  
-        <div> // was form  
+        <div> 
             <div class="section" id="sectionfull">  
                 <h2>Charinet Config</h2>  
 
@@ -282,14 +282,14 @@ button {
                 <br>
                 <ul id="tags-list"></ul> 
                 <div>
-                    <button type="button" class="idtag-button" id="idtag-button-back-to-full-page"> Full Page</button>
-                    <button type="button" class="idtag-button" id="send-to-server-button"> Send to Server</button>
+                    <button type="button" class="idtag-button" id="idtag-button-back-to-full-page"> Back</button>
+<!--                     <button type="button" class="idtag-button" id="send-to-server-button"> Send to Server</button> -->
                 </div>
 
             </center>
         </div> 
         </center>
-        </div> // was form  
+        </div>
     </div>
 </body>
 <script>
@@ -297,9 +297,9 @@ button {
     document.getElementById('idtag-button-back-to-full-page').addEventListener('click', showFullPage);
     document.getElementById('setButton').addEventListener('click', save);  
     document.getElementById('getButton').addEventListener('click', connectFun);  
-    document.getElementById('send-idtag-button').addEventListener('click', addIDTag2); 
-    document.getElementById('read-idtag-button').addEventListener('click', getIDTags2); 
-    document.getElementById('send-to-server-button').addEventListener('click', sendTagsToServer);  
+    document.getElementById('send-idtag-button').addEventListener('click', sendSingleTagToServer); 
+    document.getElementById('read-idtag-button').addEventListener('click', getIDTags3); 
+    // document.getElementById('send-to-server-button').addEventListener('click', sendTagsToServer);  
               
     var idtagsList = document.getElementById("sectionidtagslist");
     idtagsList.style.display = "none";
@@ -466,7 +466,7 @@ function getIDTags() {
 }
 
 
-function getIDTags2() {
+function getIDTags3() {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "http://192.168.1.1:8080/api/getidtags", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -528,7 +528,82 @@ function getIDTags2() {
     xhr.send();
 }
 
+function addIDTag2() {
+    const inputText = document.getElementById('idtag-input-text').value.trim();
 
+    if (inputText === '') {
+        alert('Please enter some text before saving.');
+        return;
+    }
+
+    // First, validate and add to server
+    fetch('http://192.168.1.1:8080/api/addSingleDriver', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: inputText })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add on server. ID may be invalid or already added.');
+        }
+        return response.json(); // Optional: if server sends data
+    })
+    .then(data => {
+        // Create list item only after successful add
+        const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.alignItems = 'center';
+        li.style.gap = '8px';
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = inputText;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'X';
+        deleteBtn.style.color = 'white';
+        deleteBtn.style.backgroundColor = 'red';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.cursor = 'pointer';
+        deleteBtn.style.padding = '2px 6px';
+        deleteBtn.type = 'button'; // Prevent form submission
+
+        deleteBtn.onclick = function(event) {
+            event.preventDefault();
+            fetch('http://192.168.1.1:8080/api/deleteSingleDriver', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: inputText })
+            })
+            .then(response => {
+                if (response.ok) {
+                    li.remove();
+                } else {
+                    alert('Failed to delete on server.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error while sending delete request.');
+            });
+
+            showIDTags(); // Optional: refresh tag list
+        };
+
+        li.appendChild(textSpan);
+        li.appendChild(deleteBtn);
+
+        document.getElementById('tags-list').appendChild(li);
+        document.getElementById('idtag-input-text').value = '';
+    })
+    .catch(error => {
+        console.error('Add error:', error);
+        alert(error.message);
+    });
+}
 
 function showIDTags() {
     var idTagsPage = document.getElementById("sectionidtag");
@@ -536,6 +611,7 @@ function showIDTags() {
     idTagsPage.style.display = "none";
     fullPage.style.display = "none";
     idtagsList.style.display = "block";
+    getIDTags3();
 }
 
 function showFullPage() {
@@ -637,6 +713,52 @@ function sendTagsToServer() {
                 }  
             };
     xhr.send(dataToSend);
+}
+
+function sendSingleTagToServer() {
+    const inputText = document.getElementById('idtag-input-text').value.trim();
+
+    if (inputText === '') {
+        alert('Please enter a MAC address before sending.');
+        return;
+    }
+
+    // Check if the tag already exists in the list
+    const listItems = document.querySelectorAll('#tags-list li');
+    const existingTags = Array.from(listItems).map(li => {
+        // Get only the text content (excluding delete button if present)
+        return li.querySelector('span')?.textContent || li.textContent.trim();
+    });
+
+    if (existingTags.includes(inputText)) {
+        alert('This MAC address is already in the list.');
+        return;
+    }
+
+    const dataToSend = JSON.stringify({ macAddresses: [inputText] });
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://192.168.1.1:8080/api/updatedriverlist', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                alert('MAC address sent successfully!');
+            } else {
+                alert('Error sending MAC address. Please try again.');
+            }
+        }
+    };
+
+    xhr.send(dataToSend);
+    getIDTags3();
+}
+
+
+
+function singleSendToServer() {
+
 }
 
 </script>
