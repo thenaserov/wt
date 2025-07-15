@@ -100,7 +100,7 @@ button {
 <body>  
     <div class="container" id="container-full">  
         <h1 id="topserial">MCGFF3442953</h1>  
-        <form>  
+        <div> // was form  
             <div class="section" id="sectionfull">  
                 <h2>Charinet Config</h2>  
 
@@ -289,7 +289,7 @@ button {
             </center>
         </div> 
         </center>
-        </form>  
+        </div> // was form  
     </div>
 </body>
 <script>
@@ -400,7 +400,7 @@ function populateFields(config) {
     document.getElementById('lan-dhcp').checked = config.dhcp === "Enabled";
 
     document.getElementById('server-url').value = config.server_address || '';
-    document.getElementById('serial').value = config.cp_name || '';
+    document.getElementById('serial').value = config.serial || '';
     document.getElementById('auth-key').value = config.auth_key || '';
     document.getElementById('power-distribution-2').checked = config.power_distribution_2;
 
@@ -515,6 +515,7 @@ function getIDTags2() {
                         console.error('Error:', error);
                         alert('Error while sending request.');
                     });
+                    showIDTags();
                 };
 
                 li.appendChild(textSpan);
@@ -576,6 +577,7 @@ function addIDTag2() {
         // Create delete button
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = 'X';
+        deleteBtn.type = 'Button';
         deleteBtn.style.color = 'white';
         deleteBtn.style.backgroundColor = 'red';
         deleteBtn.style.border = 'none';
@@ -583,7 +585,8 @@ function addIDTag2() {
         deleteBtn.style.padding = '2px 6px';
 
         // Add delete function
-        deleteBtn.onclick = function() {
+        deleteBtn.onclick = function(event) {
+            event.preventDefault();
             fetch('http://192.168.1.1:8080/api/deleteSingleDriver', {
                 method: 'POST',
                 headers: {
